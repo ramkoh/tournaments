@@ -1,0 +1,2 @@
+insert into matches(id, team1, team2, location, match_date_time) values (1, 'Germany', 'Ireland', 'Ireland', '2020-01-11');
+insert into matches(id, team1, team2, location, match_date_time) values (2, 'Germany', 'Italy', 'Ireland', '2020-03-11');

@@ -5,8 +5,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient("teams-service")
+@FeignClient("zuul-api-gateway")
 public interface TeamsFeignClient {
-    @GetMapping("ms/teams/{id}")
-    Team getTeamById(@PathVariable Long id);
+    @GetMapping("/teams-service/ms/team/{name}")
+    Team getTeamByName(@PathVariable String name);
 }

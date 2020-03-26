@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class MatchContoller {
+public class MatchController {
 
     @Autowired
     MatchService matchService;
@@ -45,9 +45,9 @@ public class MatchContoller {
         return new ResponseEntity<Match>(match, HttpStatus.OK);
     }
 
-    @GetMapping("match")
-    public ResponseEntity<List<Match>> viewAllMatches(){
+    @GetMapping("matches")
+    public List<Match> viewAllMatches(){
         List<Match> matches = matchService.getAllMatches();
-        return new ResponseEntity<List<Match>>(matches, HttpStatus.OK);
+        return matches;
     }
 }

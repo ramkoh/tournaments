@@ -19,8 +19,8 @@ public class MatchService {
     MatchRepository matchRepository;
 
     public Match saveMatch(final Match match){
-        teamsFeignClient.getTeamById(match.getTeam1());
-        teamsFeignClient.getTeamById(match.getTeam2());
+        teamsFeignClient.getTeamByName(match.getTeam1());
+        teamsFeignClient.getTeamByName(match.getTeam2());
         matchRepository.save(match);
         return match;
     }
