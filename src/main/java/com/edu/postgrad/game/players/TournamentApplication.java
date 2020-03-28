@@ -1,5 +1,6 @@
 package com.edu.postgrad.game.players;
 
+import brave.sampler.Sampler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,5 +26,11 @@ public class TournamentApplication {
 	public RestTemplate getRestTemplate(){
 		return new RestTemplate();
 	}
+
+	@Bean
+	public Sampler defaultSampler(){
+		return Sampler.ALWAYS_SAMPLE;
+	}
+
 
 }

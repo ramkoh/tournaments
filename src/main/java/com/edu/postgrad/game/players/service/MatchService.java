@@ -12,15 +12,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class MatchService {
 
-    @Autowired
-    TeamsFeignClient teamsFeignClient;
+
 
     @Autowired
     MatchRepository matchRepository;
 
     public Match saveMatch(final Match match){
-        teamsFeignClient.getTeamByName(match.getTeam1());
-        teamsFeignClient.getTeamByName(match.getTeam2());
+        //teamsFeignClient.getTeamByName(match.getTeam1());
+        //teamsFeignClient.getTeamByName(match.getTeam2());
         matchRepository.save(match);
         return match;
     }

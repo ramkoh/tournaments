@@ -3,6 +3,7 @@ package com.edu.postgrad.game.players.rest;
 import java.util.List;
 
 import com.edu.postgrad.game.common.Match;
+import com.edu.postgrad.game.players.rest.feign.TeamsFeignClient;
 import com.edu.postgrad.game.players.service.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,12 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class MatchController {
-
+    @Autowired
+    TeamsFeignClient teamsFeignClient;
     @Autowired
     MatchService matchService;
 
     @PostMapping("match")
     public ResponseEntity<Match> createMatch(@RequestBody  Match match){
+        teamsFeignClient.getTeamByName(match.getTeam1());
+        teamsFeignClient.getTeamByName(match.getTeam2());
         matchService.saveMatch(match);
         return new ResponseEntity<Match>(match, HttpStatus.OK);
     }
