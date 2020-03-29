@@ -12,20 +12,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class MatchService {
 
-
-
     @Autowired
     MatchRepository matchRepository;
 
     public Match saveMatch(final Match match){
-        //teamsFeignClient.getTeamByName(match.getTeam1());
-        //teamsFeignClient.getTeamByName(match.getTeam2());
         matchRepository.save(match);
         return match;
     }
 
     public Match getMatchById(final Long matchId){
-        return matchRepository.findById(matchId).orElseThrow(MatchException::new);
+        return matchRepository.findById(matchId).orElseThrow(()
+                -> new MatchException(String.format("Match with id %s not found", matchId)));
     }
 
     public void deleteMatch(final Long matchId){
@@ -35,5 +32,9 @@ public class MatchService {
 
     public List<Match> getAllMatches(){
         return matchRepository.findAll();
+    }
+
+    public List<Match> getMatchesByLocation(String location) {
+        return matchRepository.findMatchesByLocation(location);
     }
 }

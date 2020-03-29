@@ -1,8 +1,12 @@
 package com.edu.postgrad.game.players.rest;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import com.edu.postgrad.game.common.Match;
+import com.edu.postgrad.game.players.config.MatchConfiguration;
+import com.edu.postgrad.game.players.exception.MatchException;
 import com.edu.postgrad.game.players.rest.feign.TeamsFeignClient;
 import com.edu.postgrad.game.players.service.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 public class MatchController {
@@ -22,13 +27,24 @@ public class MatchController {
     TeamsFeignClient teamsFeignClient;
     @Autowired
     MatchService matchService;
+    @Autowired
+    MatchConfiguration matchConfiguration;
 
     @PostMapping("match")
     public ResponseEntity<Match> createMatch(@RequestBody  Match match){
-        teamsFeignClient.getTeamByName(match.getTeam1());
-        teamsFeignClient.getTeamByName(match.getTeam2());
+        try {
+            teamsFeignClient.getTeamByName(match.getTeam1());
+            teamsFeignClient.getTeamByName(match.getTeam2());
+        }catch (Exception e){
+            throw new MatchException("Invalid team name provided.");
+        }
         matchService.saveMatch(match);
-        return new ResponseEntity<Match>(match, HttpStatus.OK);
+        //Create resource location
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(match.getId())
+                .toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("match/{id}")
@@ -52,6 +68,12 @@ public class MatchController {
     @GetMapping("matches")
     public List<Match> viewAllMatches(){
         List<Match> matches = matchService.getAllMatches();
+        return matches;
+    }
+
+    @GetMapping(value = {"match/location", "match/location/{location}"})
+    public List<Match> getMatchByLocation(@PathVariable(required = false) Optional<String> location){
+        List<Match> matches = matchService.getMatchesByLocation( location.orElse(matchConfiguration.getLocation()));
         return matches;
     }
 }
